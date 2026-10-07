@@ -1,0 +1,328 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Schedule a Ride | Top Hand Rides</title>
+<meta name="description" content="Request a prescheduled pedicab ride in downtown Austin.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Alfa+Slab+One&family=Barlow:wght@400;500;600&family=Barlow+Condensed:wght@600;700&display=swap">
+<style>
+  :root { --ink: #15171A; --paper: #FFFFFF; --accent: #0E6F6B; --gold: #F2B01E; --muted: #4A4F55; --line: #B9BEC4; --error: #A3261B; }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--paper); color: var(--ink); font-family: 'Barlow', system-ui, sans-serif; font-size: 18px; line-height: 1.45; }
+  a { color: inherit; }
+
+  .top { background: var(--ink); color: #fff; padding: 16px 20px; }
+  .brand { display: flex; align-items: center; gap: 12px; text-decoration: none; max-width: 640px; margin: 0 auto; }
+  .brand img { width: 48px; height: 48px; border-radius: 50%; object-fit: cover; }
+  .brand-name { font-family: 'Alfa Slab One', serif; font-size: 19px; line-height: 1; letter-spacing: 0.02em; }
+  .brand-sub { font-size: 13px; color: #D7DADD; margin-top: 4px; }
+
+  main { max-width: 640px; margin: 0 auto; padding: 28px 20px 64px; }
+  h1 { margin: 0 0 8px; font-family: 'Alfa Slab One', serif; font-weight: 400; font-size: clamp(36px, 9vw, 52px); line-height: 1; }
+  .lede { margin: 0 0 28px; color: var(--muted); }
+
+  form { display: grid; gap: 20px; }
+  .row { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; }
+  .field { display: grid; gap: 6px; min-width: 0; }
+  label, legend { font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 16px; letter-spacing: 0.1em; text-transform: uppercase; }
+  .opt { font-family: 'Barlow', sans-serif; font-weight: 400; font-size: 14px; letter-spacing: 0; text-transform: none; color: var(--muted); }
+  input, select, textarea { width: 100%; min-height: 50px; padding: 12px 14px; border: 2px solid var(--line); border-radius: 6px; background: #fff; color: var(--ink); font: inherit; font-size: 18px; -webkit-appearance: none; appearance: none; }
+  textarea { min-height: 96px; resize: vertical; }
+  select { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='9' viewBox='0 0 14 9'%3E%3Cpath d='M1 1l6 6 6-6' fill='none' stroke='%2315171A' stroke-width='2'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 14px center; padding-right: 40px; }
+  input:focus, select:focus, textarea:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px rgba(14, 111, 107, 0.25); }
+  .invalid { border-color: var(--error); }
+  .hint { font-size: 15px; color: var(--muted); }
+  .cabs { display: none; padding: 10px 14px; border-radius: 6px; background: #FFF4D6; font-size: 16px; }
+  .hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+
+  .btn { display: inline-flex; align-items: center; justify-content: center; width: 100%; min-height: 54px; padding: 14px 22px; border: 0; border-radius: 6px; background: var(--gold); color: var(--ink); cursor: pointer; text-decoration: none; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 22px; letter-spacing: 0.08em; text-transform: uppercase; }
+  .btn:hover { background: #FFC53D; }
+  .btn:disabled { opacity: 0.6; cursor: default; }
+  .btn:focus-visible, a:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
+  .note { font-size: 15px; color: var(--muted); text-align: center; margin: 0; }
+  .msg { display: none; padding: 12px 14px; border-radius: 6px; background: #FBE9E7; color: var(--error); font-weight: 500; }
+
+  .done { display: none; text-align: center; padding: 32px 0; }
+  .done h2 { margin: 0 0 12px; font-family: 'Alfa Slab One', serif; font-weight: 400; font-size: 40px; line-height: 1.05; color: var(--accent); }
+  .done p { margin: 0 0 24px; }
+  .summary { text-align: left; border: 2px solid var(--ink); border-radius: 6px; padding: 16px; margin: 0 0 24px; font-size: 17px; }
+  .summary div { display: flex; gap: 12px; padding: 4px 0; }
+  .summary b { flex: 0 0 96px; font-family: 'Barlow Condensed', sans-serif; letter-spacing: 0.08em; text-transform: uppercase; font-size: 15px; padding-top: 2px; }
+  .summary span { overflow-wrap: anywhere; }
+</style>
+</head>
+<body>
+
+<header class="top">
+  <a class="brand" href="../">
+    <img src="../assets/logo.png" alt="" onerror="this.style.display='none'">
+    <div>
+      <div class="brand-name">TOP HAND RIDES</div>
+      <div class="brand-sub">Pedicab · Austin, Texas</div>
+    </div>
+  </a>
+</header>
+
+<main>
+  <div id="formView">
+    <h1>Schedule a ride</h1>
+    <p class="lede">Tell us when and where. We'll text you to confirm.</p>
+
+    <form id="bookForm" novalidate>
+      <div class="field">
+        <label for="name">Name</label>
+        <input id="name" name="name" type="text" autocomplete="name" maxlength="80" required>
+      </div>
+
+      <div class="row">
+        <div class="field">
+          <label for="mobile">Mobile</label>
+          <input id="mobile" name="mobile" type="tel" inputmode="tel" autocomplete="tel" maxlength="24" required>
+        </div>
+        <div class="field">
+          <label for="email">Email <span class="opt">(optional)</span></label>
+          <input id="email" name="email" type="email" autocomplete="email" maxlength="120">
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="rideType">Ride type</label>
+        <select id="rideType" name="rideType" required>
+          <option value="">Choose one</option>
+          <option>Event pickup</option>
+          <option>Brewery tour</option>
+          <option>City tour</option>
+          <option>Nightlife tour</option>
+          <option>Other</option>
+        </select>
+      </div>
+
+      <div class="row">
+        <div class="field">
+          <label for="date">Date</label>
+          <input id="date" name="date" type="date" required>
+        </div>
+        <div class="field">
+          <label for="time">Pickup time</label>
+          <input id="time" name="time" type="time" required>
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="pickup">Pickup location</label>
+        <input id="pickup" name="pickup" type="text" maxlength="160" placeholder="Venue, address or cross streets" required>
+      </div>
+
+      <div class="field">
+        <label for="dropoff">Drop-off or destination <span class="opt">(optional)</span></label>
+        <input id="dropoff" name="dropoff" type="text" maxlength="160">
+      </div>
+
+      <div class="field">
+        <label for="riders">Number of riders</label>
+        <select id="riders" name="riders" required>
+          <option value="">Choose one</option>
+          <option>1</option><option>2</option><option>3</option><option>4</option>
+          <option>5</option><option>6</option><option>7</option><option>8</option>
+          <option>9</option><option>10</option><option>11</option><option>12</option>
+          <option value="13+">More than 12</option>
+        </select>
+        <div class="hint">Each cab seats up to 3 riders.</div>
+        <div class="cabs" id="cabsNote" role="status"></div>
+      </div>
+
+      <div class="field">
+        <label for="notes">Notes <span class="opt">(optional)</span></label>
+        <textarea id="notes" name="notes" maxlength="500" placeholder="Anything we should know"></textarea>
+      </div>
+
+      <!-- Spam trap: real visitors never see or fill this. -->
+      <div class="hp" aria-hidden="true">
+        <label for="website">Website</label>
+        <input id="website" name="website" type="text" tabindex="-1" autocomplete="off">
+      </div>
+
+      <div class="msg" id="msg" role="alert"></div>
+      <button class="btn" id="submitBtn" type="submit">Request ride</button>
+      <p class="note">This is a request, not a confirmed booking, until we text you back.</p>
+    </form>
+  </div>
+
+  <div class="done" id="doneView" tabindex="-1">
+    <h2>Request received.</h2>
+    <p id="doneText">We'll text you to confirm.</p>
+    <div class="summary" id="summary"></div>
+    <a class="btn" href="../">Back to Top Hand Rides</a>
+  </div>
+</main>
+
+<script>
+/* ============================================================
+   EDIT HERE: paste the Google Apps Script web app URL
+   (it ends in /exec) between the quotes.
+   ============================================================ */
+var ENDPOINT = "https://script.google.com/macros/s/AKfycbzNjKhl_neX6HUKh9Bepyz5BnsLKcGJYpoSpoUsyJH9R22KsYhGU9-8hHV8jvgzjBSK/exec";
+
+var SEATS_PER_CAB = 3;
+
+(function () {
+  var form = document.getElementById("bookForm");
+  var msg = document.getElementById("msg");
+  var btn = document.getElementById("submitBtn");
+  var riders = document.getElementById("riders");
+  var cabsNote = document.getElementById("cabsNote");
+  var dateEl = document.getElementById("date");
+
+  // Earliest selectable date is today (local time).
+  var now = new Date();
+  function pad(n) { return (n < 10 ? "0" : "") + n; }
+  dateEl.min = now.getFullYear() + "-" + pad(now.getMonth() + 1) + "-" + pad(now.getDate());
+
+  function cabsFor(v) {
+    if (v === "13+") { return "5+"; }
+    var n = parseInt(v, 10);
+    return n ? String(Math.ceil(n / SEATS_PER_CAB)) : "";
+  }
+
+  riders.addEventListener("change", function () {
+    var v = riders.value, n = parseInt(v, 10);
+    if (v === "13+") {
+      cabsNote.textContent = "Large group: we'll work out the number of cabs with you.";
+      cabsNote.style.display = "block";
+    } else if (n > SEATS_PER_CAB) {
+      cabsNote.textContent = "Your group needs " + cabsFor(v) + " cabs. We'll confirm availability.";
+      cabsNote.style.display = "block";
+    } else {
+      cabsNote.style.display = "none";
+    }
+  });
+
+  function showError(text) { msg.textContent = text; msg.style.display = "block"; }
+  function clearError() { msg.style.display = "none"; }
+
+  function validate() {
+    var firstBad = null;
+    Array.prototype.forEach.call(form.querySelectorAll("[required]"), function (el) {
+      var ok = el.value.trim() !== "";
+      el.classList.toggle("invalid", !ok);
+      if (!ok && !firstBad) { firstBad = el; }
+    });
+    if (firstBad) { firstBad.focus(); return "Please fill in the highlighted fields."; }
+
+    var mobile = document.getElementById("mobile");
+    if (mobile.value.replace(/\D/g, "").length < 10) {
+      mobile.classList.add("invalid"); mobile.focus();
+      return "Please enter a mobile number with area code.";
+    }
+    var email = document.getElementById("email");
+    if (email.value.trim() && !/^\S+@\S+\.\S+$/.test(email.value.trim())) {
+      email.classList.add("invalid"); email.focus();
+      return "That email address doesn't look right.";
+    }
+    if (dateEl.value < dateEl.min) {
+      dateEl.classList.add("invalid"); dateEl.focus();
+      return "Please pick today or a later date.";
+    }
+    return "";
+  }
+
+  function prettyTime(t) {
+    var m = /^(\d{1,2}):(\d{2})/.exec(t);
+    if (!m) { return t; }
+    var h = parseInt(m[1], 10), ap = h >= 12 ? "PM" : "AM";
+    h = h % 12; if (h === 0) { h = 12; }
+    return h + ":" + m[2] + " " + ap;
+  }
+  function prettyDate(d) {
+    var p = d.split("-");
+    if (p.length !== 3) { return d; }
+    var dt = new Date(+p[0], +p[1] - 1, +p[2]);
+    return dt.toLocaleDateString(undefined, { weekday: "short", month: "short", day: "numeric", year: "numeric" });
+  }
+
+  function showDone(data, confirmed) {
+    var rows = [
+      ["Name", data.name], ["Ride", data.rideType],
+      ["When", prettyDate(data.date) + " at " + prettyTime(data.time)],
+      ["Pickup", data.pickup], ["Riders", data.riders]
+    ];
+    var box = document.getElementById("summary");
+    box.textContent = "";
+    rows.forEach(function (r) {
+      var d = document.createElement("div"), b = document.createElement("b"), s = document.createElement("span");
+      b.textContent = r[0]; s.textContent = r[1]; d.appendChild(b); d.appendChild(s); box.appendChild(d);
+    });
+    if (!confirmed) {
+      document.getElementById("doneText").textContent =
+        "We'll text you to confirm. If you don't hear from us within a day, please text us directly.";
+    }
+    document.getElementById("formView").style.display = "none";
+    var done = document.getElementById("doneView");
+    done.style.display = "block"; done.focus(); window.scrollTo(0, 0);
+  }
+
+  function send(url, onConfirmed, onSentUnconfirmed, onFailed) {
+    // First try a normal request so we can read the server's answer.
+    var finished = false, timer = null;
+    function fallback() {
+      if (finished) { return; }
+      finished = true; clearTimeout(timer);
+      // Image-ping fallback. The server ignores a repeat of the same id.
+      var img = new Image();
+      img.onload = img.onerror = function () { onSentUnconfirmed(); };
+      img.src = url + "&via=img";
+    }
+    if (!window.fetch) { fallback(); return; }
+    timer = setTimeout(fallback, 12000);
+    fetch(url, { method: "GET", redirect: "follow" })
+      .then(function (r) { return r.json(); })
+      .then(function (j) {
+        if (finished) { return; }
+        finished = true; clearTimeout(timer);
+        if (j && j.ok) { onConfirmed(); } else { onFailed(); }
+      })
+      .catch(fallback);
+  }
+
+  form.addEventListener("submit", function (ev) {
+    ev.preventDefault();
+    clearError();
+    var problem = validate();
+    if (problem) { showError(problem); return; }
+    if (!ENDPOINT) { showError("The booking form isn't connected yet. Please text us to schedule."); return; }
+    if (navigator.onLine === false) { showError("You appear to be offline. Please reconnect and try again."); return; }
+
+    var data = {
+      id: Date.now().toString(36) + Math.random().toString(36).slice(2, 10),
+      name: form.name.value.trim(),
+      mobile: form.mobile.value.trim(),
+      email: form.email.value.trim(),
+      rideType: form.rideType.value,
+      date: form.date.value,
+      time: form.time.value,
+      pickup: form.pickup.value.trim(),
+      dropoff: form.dropoff.value.trim(),
+      riders: form.riders.value,
+      cabs: cabsFor(form.riders.value),
+      notes: form.notes.value.trim(),
+      website: form.website.value
+    };
+    var qs = Object.keys(data).map(function (k) {
+      return encodeURIComponent(k) + "=" + encodeURIComponent(data[k]);
+    }).join("&");
+
+    btn.disabled = true; btn.textContent = "Sending…";
+    send(ENDPOINT + "?" + qs,
+      function () { showDone(data, true); },
+      function () { showDone(data, false); },
+      function () {
+        btn.disabled = false; btn.textContent = "Request ride";
+        showError("Something went wrong sending your request. Please try again, or text us directly.");
+      });
+  });
+})();
+</script>
+</body>
+</html>
